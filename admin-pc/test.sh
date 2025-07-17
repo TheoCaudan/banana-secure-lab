@@ -3,7 +3,7 @@
 echo "==============================================="
 echo "   TEST DE CONNECTIVITE RESEAU POUR BANANACORP "
 echo "==============================================="
-echo "Exécuté depuis admin-pc (192.168.99.X)"
+echo "Exécuté depuis admin-pc (192.168.99.10)"
 echo "-----------------------------------------------"
 
 # PING TESTS
@@ -39,7 +39,7 @@ echo -n "Depuis admin-pc (192.168.99.X) ... "
 nc -z -v -w2 192.168.54.20 3306 &> /dev/null && echo "OK" || echo "FERME"
 
 echo -n "Depuis App (192.168.47.50) ... "
-echo "Exécuter dans la VM 'app' : nc -z -v -w2 192.168.54.20 3306"
+echo "Exécuter dans le conteneur 'webapp' : nc -z -v -w2 192.168.54.20 3306"
 echo "Résultat attendu : OK"
 
 echo -n "Depuis Proxy (192.168.47.10) ... "
@@ -55,10 +55,10 @@ curl -s --max-time 5 http://google.com &> /dev/null && echo "OUVERTE (OK)" || ec
 echo "Depuis Proxy : Exécuter dans le conteneur 'proxy' : curl -s --max-time 5 http://google.com"
 echo "Résultat attendu : BLOQUEE"
 
-echo "Depuis App : Exécuter dans la VM 'app' : curl -s --max-time 5 http://google.com"
+echo "Depuis Webapp : Exécuter dans le conteneur 'webapp' : curl -s --max-time 5 http://google.com"
 echo "Résultat attendu : BLOQUEE"
 
-echo "Depuis DB : Exécuter dans la VM 'db' : curl -s --max-time 5 http://google.com"
+echo "Depuis MariaDB : Exécuter dans le conteneur 'mariadb' : curl -s --max-time 5 http://google.com"
 echo "Résultat attendu : BLOQUEE"
 
 echo -e "\n==============================================="
