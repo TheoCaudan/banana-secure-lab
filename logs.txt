@@ -1,0 +1,161 @@
+proxy  | [proxy-init] Début init proxy...
+proxy   | [proxy-init] Installation outils...
+proxy   | fetch https://dl-cdn.alpinelinux.org/alpine/v3.20/main/x86_64/APKINDEX.tar.gz
+proxy   | fetch https://dl-cdn.alpinelinux.org/alpine/v3.20/community/x86_64/APKINDEX.tar.gz
+proxy   | v3.20.6-231-gf21282f1a09 [https://dl-cdn.alpinelinux.org/alpine/v3.20/main]
+proxy   | v3.20.6-225-gd17e57e3ea8 [https://dl-cdn.alpinelinux.org/alpine/v3.20/community]
+proxy   | OK: 24177 distinct packages available
+proxy   | fetch https://dl-cdn.alpinelinux.org/alpine/v3.20/main/x86_64/APKINDEX.tar.gz
+router  | [router] Enabling IP forwarding...
+router  | net.ipv4.ip_forward = 1
+router  | [router] Ready
+proxy   | fetch https://dl-cdn.alpinelinux.org/alpine/v3.20/community/x86_64/APKINDEX.tar.gz
+proxy   | (1/33) Installing brotli-libs (1.1.0-r2)
+proxy   | (2/33) Installing c-ares (1.33.1-r0)
+proxy   | (3/33) Installing libunistring (1.2-r0)
+proxy   | (4/33) Installing libidn2 (2.3.7-r0)
+proxy   | (5/33) Installing nghttp2-libs (1.62.1-r0)
+proxy   | (6/33) Installing libpsl (0.21.5-r1)
+proxy   | (7/33) Installing zstd-libs (1.5.6-r0)
+proxy   | (8/33) Installing libcurl (8.12.1-r0)
+proxy   | (9/33) Installing curl (8.12.1-r0)
+proxy   | (10/33) Installing libelf (0.191-r0)
+proxy   | (11/33) Installing libmnl (1.0.5-r2)
+proxy   | (12/33) Installing iproute2-minimal (6.9.0-r0)
+proxy   | (13/33) Installing libxtables (1.8.10-r3)
+proxy   | (14/33) Installing iproute2-tc (6.9.0-r0)
+proxy   | (15/33) Installing iproute2-ss (6.9.0-r0)
+proxy   | (16/33) Installing iproute2 (6.9.0-r0)
+proxy   | Executing iproute2-6.9.0-r0.post-install
+proxy   | (17/33) Installing mii-tool (2.10-r3)
+proxy   | (18/33) Installing net-tools (2.10-r3)
+proxy   | (19/33) Installing gmp (6.3.0-r1)
+proxy   | (20/33) Installing jansson (2.14-r4)
+proxy   | (21/33) Installing libnftnl (1.2.6-r0)
+proxy   | (22/33) Installing ncurses-terminfo-base (6.4_p20240420-r2)
+proxy   | (23/33) Installing libncursesw (6.4_p20240420-r2)
+proxy   | (24/33) Installing readline (8.2.10-r0)
+proxy   | (25/33) Installing nftables (1.0.9-r2)
+proxy   | (26/33) Installing openssh-keygen (9.7_p1-r5)
+proxy   | (27/33) Installing libedit (20240517.3.1-r0)
+proxy   | (28/33) Installing openssh-client-common (9.7_p1-r5)
+proxy   | (29/33) Installing openssh-client-default (9.7_p1-r5)
+proxy   | (30/33) Installing openssh-sftp-server (9.7_p1-r5)
+proxy   | (31/33) Installing openssh-server-common (9.7_p1-r5)
+proxy   | (32/33) Installing openssh-server (9.7_p1-r5)
+proxy   | (33/33) Installing openssh (9.7_p1-r5)
+proxy   | Executing busybox-1.36.1-r29.trigger
+proxy   | OK: 23 MiB in 54 packages
+proxy   | [proxy-init] Préparation SSH...
+proxy     | ssh-keygen: generating new host keys: RSA ECDSA ED25519 
+admin-pc  | [admin-pc] Adding routes...
+admin-pc  | [admin-pc] Routes OK
+admin-pc  | [admin-pc] Génération clefs SSH...
+admin-pc  | [admin-pc] Déverouille PermitRootLogin...
+admin-pc  | [admin-pc] Lancement sshd...
+proxy     | [proxy-init] Chargement règles nftables...
+proxy     | [proxy-init] Adding routes...
+proxy     | [proxy-init] Routes OK
+proxy     | [proxy-init] Lancement sshd...
+proxy     | [proxy-init] Lancement Caddy...
+proxy     | {"level":"info","ts":1752340090.342952,"msg":"using config from file","file":"/etc/caddy/Caddyfile"}
+proxy     | {"level":"info","ts":1752340090.3442674,"msg":"adapted config to JSON","adapter":"caddyfile"}
+proxy     | {"level":"warn","ts":1752340090.3442962,"msg":"Caddyfile input is not formatted; run 'caddy fmt --overwrite' to fix inconsistencies","adapter":"caddyfile","file":"/etc/caddy/Caddyfile","line":2}
+proxy     | {"level":"info","ts":1752340090.3453777,"logger":"admin","msg":"admin endpoint started","address":"localhost:2019","enforce_origin":false,"origins":["//[::1]:2019","//127.0.0.1:2019","//localhost:2019"]}
+proxy     | {"level":"info","ts":1752340090.34577,"logger":"tls.cache.maintenance","msg":"started background certificate maintenance","cache":"0xc000053400"}
+proxy     | {"level":"info","ts":1752340090.3506603,"logger":"http.auto_https","msg":"automatic HTTPS is completely disabled for server","server_name":"srv0"}
+proxy     | {"level":"info","ts":1752340090.350707,"logger":"http.auto_https","msg":"automatic HTTPS is completely disabled for server","server_name":"srv1"}
+proxy     | {"level":"info","ts":1752340090.3510234,"logger":"http","msg":"enabling HTTP/3 listener","addr":":443"}
+proxy     | {"level":"info","ts":1752340090.351389,"logger":"http.log","msg":"server running","name":"srv0","protocols":["h1","h2","h3"]}
+proxy     | {"level":"info","ts":1752340090.351469,"logger":"http.log","msg":"server running","name":"srv1","protocols":["h1","h2","h3"]}
+proxy     | {"level":"warn","ts":1752340090.3514814,"logger":"pki.ca.local","msg":"installing root certificate (you might be prompted for password)","path":"storage:pki/authorities/local/root.crt"}
+proxy     | {"level":"info","ts":1752340090.3524427,"msg":"warning: \"certutil\" is not available, install \"certutil\" with \"apt install libnss3-tools\" or \"yum install nss-tools\" and try again"}
+proxy     | {"level":"info","ts":1752340090.3524702,"msg":"define JAVA_HOME environment variable to use the Java trust"}
+proxy     | {"level":"info","ts":1752340090.3843155,"msg":"certificate installed properly in linux trusts"}
+proxy     | {"level":"info","ts":1752340090.3845747,"msg":"autosaved config (load with --resume flag)","file":"/config/caddy/autosave.json"}
+proxy     | {"level":"info","ts":1752340090.3845925,"msg":"serving initial configuration"}
+proxy     | {"level":"info","ts":1752340090.391797,"logger":"tls","msg":"cleaning storage unit","storage":"FileStorage:/data/caddy"}
+proxy     | {"level":"info","ts":1752340090.3920157,"logger":"tls","msg":"finished cleaning storage units"}
+webapp    | [webapp] Applying nftables rules...
+webapp    | [webapp] Starting PHP-FPM...
+webapp    | [webapp] Starting NGINX...
+webapp    | Starting nginx: nginx.
+webapp    | [webapp] Génération clefs SSH...
+webapp    | [webapp] Déverouille PermitRootLogin...
+webapp    | [webapp] Lancement sshd...
+mariadb   | [mariadb] Adding routes...
+mariadb   | [mariadb] Routes OK
+mariadb   | [mariadb] Generating SSH host keys...
+mariadb   | [mariadb] Starting nftables
+mariadb   | [mariadb] Starting MariaDB...
+mariadb   | [mariadb] Starting SSH daemon...
+mariadb   | 2025-07-12 17:08:07+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.11.13+maria~ubu2204 started.
+mariadb   | 2025-07-12 17:08:07+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+mariadb   | 2025-07-12 17:08:07+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.11.13+maria~ubu2204 started.
+mariadb   | 2025-07-12 17:08:07+00:00 [Note] [Entrypoint]: Initializing database files
+mariadb   | 2025-07-12 17:08:14+00:00 [Note] [Entrypoint]: Database files initialized
+mariadb   | 2025-07-12 17:08:14+00:00 [Note] [Entrypoint]: Starting temporary server
+mariadb   | 2025-07-12 17:08:14+00:00 [Note] [Entrypoint]: Waiting for server startup
+mariadb   | 2025-07-12 17:08:14 0 [Note] Starting MariaDB 10.11.13-MariaDB-ubu2204 source revision 8fb09426b98583916ccfd4f8c49741adc115bac3 server_uid y527tmSJi6MKEqt+up96BkUl6qg= as process 108
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: Number of transaction pools: 1
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+mariadb   | 2025-07-12 17:08:14 0 [Note] mysqld: O_TMPFILE is not supported on /tmp (disabling future attempts)
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: Using liburing
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: innodb_buffer_pool_size_max=128m, innodb_buffer_pool_size=128m
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: Initialized memory pressure event listener
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: Completed initialization of buffer pool
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: File system buffers for log disabled (block size=4096 bytes)
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: End of log at LSN=46846
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: 128 rollback segments are active.
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+mariadb   | 2025-07-12 17:08:14 0 [Note] InnoDB: log sequence number 46846; transaction id 14
+mariadb   | 2025-07-12 17:08:14 0 [Note] Plugin 'FEEDBACK' is disabled.
+mariadb   | 2025-07-12 17:08:14 0 [Note] mysqld: ready for connections.
+mariadb   | Version: '10.11.13-MariaDB-ubu2204'  socket: '/run/mysqld/mysqld.sock'  port: 0  mariadb.org binary distribution
+mariadb   | 2025-07-12 17:08:15+00:00 [Note] [Entrypoint]: Temporary server started.
+mariadb   | 2025-07-12 17:08:17+00:00 [Note] [Entrypoint]: Creating database banana
+mariadb   | 2025-07-12 17:08:17+00:00 [Note] [Entrypoint]: Securing system users (equivalent to running mysql_secure_installation)
+mariadb   | 
+mariadb   | 2025-07-12 17:08:17+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/init.sql
+mariadb   | 
+mariadb   | 
+mariadb   | 2025-07-12 17:08:17+00:00 [Note] [Entrypoint]: Stopping temporary server
+mariadb   | 2025-07-12 17:08:17 0 [Note] mysqld (initiated by: unknown): Normal shutdown
+mariadb   | 2025-07-12 17:08:17 0 [Note] InnoDB: FTS optimize thread exiting.
+mariadb   | 2025-07-12 17:08:17 0 [Note] InnoDB: Starting shutdown...
+mariadb   | 2025-07-12 17:08:17 0 [Note] InnoDB: Dumping buffer pool(s) to /var/lib/mysql/ib_buffer_pool
+mariadb   | 2025-07-12 17:08:17 0 [Note] InnoDB: Buffer pool(s) dump completed at 250712 17:08:17
+mariadb   | 2025-07-12 17:08:17 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
+mariadb   | 2025-07-12 17:08:17 0 [Note] InnoDB: Shutdown completed; log sequence number 46846; transaction id 15
+mariadb   | 2025-07-12 17:08:17 0 [Note] mysqld: Shutdown complete
+mariadb   | 2025-07-12 17:08:17+00:00 [Note] [Entrypoint]: Temporary server stopped
+mariadb   | 
+mariadb   | 2025-07-12 17:08:17+00:00 [Note] [Entrypoint]: MariaDB init process done. Ready for start up.
+mariadb   | 
+mariadb   | 2025-07-12 17:08:17 0 [Note] Starting MariaDB 10.11.13-MariaDB-ubu2204 source revision 8fb09426b98583916ccfd4f8c49741adc115bac3 server_uid y527tmSJi6MKEqt+up96BkUl6qg= as process 12
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Number of transaction pools: 1
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+mariadb   | 2025-07-12 17:08:18 0 [Note] mysqld: O_TMPFILE is not supported on /tmp (disabling future attempts)
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Using liburing
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: innodb_buffer_pool_size_max=128m, innodb_buffer_pool_size=128m
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Initialized memory pressure event listener
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Completed initialization of buffer pool
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: File system buffers for log disabled (block size=4096 bytes)
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: End of log at LSN=46846
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: 128 rollback segments are active.
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: log sequence number 46846; transaction id 14
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+mariadb   | 2025-07-12 17:08:18 0 [Note] Plugin 'FEEDBACK' is disabled.
+mariadb   | 2025-07-12 17:08:18 0 [Note] InnoDB: Buffer pool(s) load completed at 250712 17:08:18
+mariadb   | 2025-07-12 17:08:18 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
+mariadb   | 2025-07-12 17:08:18 0 [Note] Server socket created on IP: '0.0.0.0'.
+mariadb   | 2025-07-12 17:08:18 0 [Note] Server socket created on IP: '::'.
+mariadb   | 2025-07-12 17:08:18 0 [Note] mysqld: ready for connections.
+mariadb   | Version: '10.11.13-MariaDB-ubu2204'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+mariadb   | 2025-07-12 17:08:55 3 [Warning] Aborted connection 3 to db: 'unconnected' user: 'unauthenticated' host: '192.168.99.10' (This connection closed normally without authentication)
+mariadb   | 2025-07-12 17:13:09 4 [Warning] Aborted connection 4 to db: 'unconnected' user: 'unauthenticated' host: '192.168.99.10' (This connection closed normally without authentication)

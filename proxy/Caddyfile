@@ -1,0 +1,20 @@
+{
+  auto_https off
+}
+
+banana.corp:80 {
+  reverse_proxy 192.168.47.50:80
+  log {
+    output stdout
+    format console
+  }
+}
+
+banana.corp:443 {
+  tls internal
+  reverse_proxy 192.168.47.50:80
+  log {
+    output stdout
+    format console
+  }
+}

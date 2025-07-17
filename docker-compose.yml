@@ -1,0 +1,175 @@
+secrets:
+  mariadb_root_password:
+    file: ./secrets/mariadb_root_password.txt
+  mariadb_user_password:
+    file: ./secrets/mariadb_user_password.txt
+  webapp_db_password:
+    file: ./secrets/webapp_db_password.txt
+  adminpc_ssh_password:
+    file: ./secrets/adminpc_ssh_password.txt
+  proxy_admin_password:
+    file: ./secrets/proxy_admin_password.txt
+
+services:
+  router:
+    build: ./router
+    container_name: router
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_ADMIN
+    privileged: true
+    networks:
+      dmz:
+        ipv4_address: 192.168.47.254
+      internal:
+        ipv4_address: 192.168.54.254
+      admin:
+        ipv4_address: 192.168.99.254
+    volumes:
+      - ./nftables/nftables-router.conf:/etc/nftables.conf:ro
+      - ./init/router-init.sh:/usr/local/bin/init.sh
+      - ./router/dhcpd.conf:/etc/dhcp/dhcpd.conf
+    entrypoint: ["sh", "/usr/local/bin/init.sh"]
+    depends_on:
+      - mariadb
+      - admin-pc
+      - proxy
+    restart: unless-stopped
+
+  proxy:
+    image: caddy:2.8
+    container_name: proxy
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    privileged: true
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      dmz:
+        ipv4_address: 192.168.47.10
+    volumes:
+      - ./proxy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./nftables/nftables-proxy.conf:/etc/nftables.conf:ro
+      - ./init/proxy-init.sh:/usr/local/bin/init.sh
+    entrypoint: ["sh", "/usr/local/bin/init.sh"]
+    depends_on:
+      - mariadb
+      - admin-pc
+    restart: unless-stopped
+    
+  webapp:
+    build: ./webapp
+    container_name: webapp
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    privileged: true
+    networks:
+      dmz:
+        ipv4_address: 192.168.47.50
+    volumes:
+      - ./nftables/nftables-webapp.conf:/etc/nftables.conf:ro
+      - ./webapp/nginx.conf:/etc/nginx/sites-available/default:ro
+      - ./webapp/php-fpm.conf:/etc/php/8.3/fpm/pool.d/bananawp.conf:ro
+      - ./webapp/wp-config.php:/var/www/html/wordpress/wp-config.php:ro
+      - ./webapp/entrypoint.sh:/entrypoint.sh
+    depends_on:
+      - mariadb
+      - admin-pc
+      - proxy
+      - router
+    restart: unless-stopped
+    entrypoint: ["/entrypoint.sh"]
+
+  mariadb:
+    build: ./mariadb
+    container_name: mariadb
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    privileged: true
+    secrets:
+      - mariadb_root_password
+      - mariadb_user_password
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mariadb_root_password
+      MYSQL_DATABASE: banana
+      MYSQL_USER: banana
+    networks:
+      internal:
+        ipv4_address: 192.168.54.20
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./nftables/nftables-db.conf:/etc/nftables.conf:ro
+      - ./mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init/mariadb-init.sh:/usr/local/bin/init.sh
+    entrypoint: ["sh", "/usr/local/bin/init.sh"]
+    restart: unless-stopped
+    command: sh -c "echo 'nameserver 8.8.8.8' > /etc/resolv.conf && if [ -d /var/lib/mysql/mysql ]; then mysql_upgrade --user=mysql; else mysql_install_db --user=mysql --datadir=/var/lib/mysql; fi && mariadbd --user=mysql --bind-address=0.0.0.0 --init-file=/docker-entrypoint-initdb.d/init.sql & ssh-keygen -A && nft -f /etc/nftables.conf || true && /usr/sbin/sshd -D & wait"
+
+  admin-pc:
+    build: ./admin-pc
+    container_name: admin-pc
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    privileged: true
+    networks:
+      admin:
+        ipv4_address: 192.168.99.10
+    volumes:
+      - ./admin-pc/test.sh:/etc/test/test.sh:ro
+      - ./nftables/nftables-admin.conf:/etc/nftables.conf:ro
+      - ./init/admin-pc-init.sh:/usr/local/bin/init.sh
+    entrypoint: ["sh", "/usr/local/bin/init.sh"]
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+    command: sh -c "export DEBIAN_FRONTEND=noninteractive && echo 'nameserver 8.8.8.8' > /etc/resolv.conf && apt-get update && apt-get install -y net-tools iputils-ping && ssh-keygen -A && nft -f /etc/nftables.conf || true && /usr/sbin/sshd -D & sleep infinity"
+
+  dhcp-client-test:
+    image: debian:12
+    container_name: dhcp-client-test
+    networks:
+      - admin
+    cap_add:
+      - NET_ADMIN    
+    privileged: true  
+    command: bash -c "
+      apt-get update && apt-get install -y isc-dhcp-client iputils-ping &&
+      dhclient eth0 &&
+      ip addr show eth0 &&
+      ip route add 192.168.99.0/24 via 192.168.99.254 &&
+      ping -c 3 192.168.99.254 &&
+      sleep infinity
+      "
+
+networks:
+  dmz:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.47.0/24
+          gateway: 192.168.47.1
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.54.0/24
+          gateway: 192.168.54.1
+  admin:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.99.0/24
+          gateway: 192.168.99.1
+
+volumes:
+  dbdata:
+  caddy_data:
+  caddy_config:
